@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main menu</title>
+</head>
+<body>
+<p><span th:text="${name}"></span></p>
+<p>Main menu: </p>
+
+<div>
+  <a th:href="@{hiking/all}">
+    <button>View all hiking trips</button>
+  </a>
+</div>
+<br>
+<div>
+    <a th:href="@{hiking/visited}">
+        <button>View all visited waypoints</button>
+    </a>
+</div>
+<br>
+<div>
+    <a th:href="@{hiking/unvisited}">
+        <button>View all unvisited waypoints</button>
+    </a>
+</div>
+<br>
+<div>
+    <a th:href="@{hiking/add}">
+        <button>Add new hiking trip</button>
+    </a>
+</div>
+<br>
+<div>
+    <a th:href="@{hiking/delete}">
+        <button>Delete existing hiking trip</button>
+    </a>
+</div>
+
+</body>
+</html>
