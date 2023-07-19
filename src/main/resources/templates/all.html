@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All hiking trips</title>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>Date</th>
+    <th>Duration</th>
+    <th>Route (to jest kolumna pomocnicza i będzie usunięta!!!)</th>
+    <th>Route by waypoints</th>
+    <th>Route total length</th>
+    <th>Route pace [min/km]</th>
+    <th>Route speed [km/h]</th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="currentHike : ${hikesFromDb}">
+    <td th:text="${currentHike.hikeId}"></td>
+    <td th:text="${currentHike.date}"></td>
+    <td th:text="${currentHike.duration}"></td>
+    <td th:text="${currentHike.routes}"></td>
+    <td th:text="${currentHike.routeByWaypoints}"></td>
+    <td th:text="${currentHike.distance}"></td>
+    <td th:text="${currentHike.pace}"></td>
+    <td th:text="${currentHike.speed}"></td>
+  </tr>
+</body>
+</html>
