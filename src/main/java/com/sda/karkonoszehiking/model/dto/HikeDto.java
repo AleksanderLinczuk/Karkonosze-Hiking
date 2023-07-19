@@ -1,7 +1,6 @@
 package com.sda.karkonoszehiking.model.dto;
 
 import com.sda.karkonoszehiking.model.entity.RouteEntity;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,6 +20,11 @@ public class HikeDto {
     private LocalTime duration;
     private List<RouteEntity> routes = new ArrayList<>();
     private String routeByWaypoints;
+    private double distance;
+    private String pace;
+    private String speed;
+    //todo: add elevation
+
 
 
     @Override

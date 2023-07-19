@@ -19,14 +19,10 @@ public class WaypointDto {
     private Long waypointId;
     private String name;
     private double height;
-    private List<RouteEntity> routes = new ArrayList<>();
-    private List<AvailablePathsEntity> availablePaths = new ArrayList<>();
 
-    public WaypointDto(Long waypointId, String name, double height, List<RouteEntity> routes, List<AvailablePathsEntity> availablePaths) {
+    public WaypointDto(Long waypointId, String name, double height) {
         this.waypointId = waypointId;
         this.name = name;
         this.height = height;
-        this.routes = routes;
-        this.availablePaths = availablePaths;
     }
 }

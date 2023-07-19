@@ -21,14 +21,12 @@ public class RouteDto {
     private Long routeId;
     private WaypointEntity start;
     private AvailablePathsEntity end;
-    private List<HikeEntity> hikes = new ArrayList<>();
     private double length;
 
-    public RouteDto(Long routeId, WaypointEntity start, AvailablePathsEntity end, List<HikeEntity> hikes, double length) {
+    public RouteDto(Long routeId, WaypointEntity start, AvailablePathsEntity end, double length) {
         this.routeId = routeId;
         this.start = start;
         this.end = end;
-        this.hikes = hikes;
         this.length = length;
     }
 }
