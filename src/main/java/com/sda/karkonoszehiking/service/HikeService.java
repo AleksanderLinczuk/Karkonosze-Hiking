@@ -110,4 +110,8 @@ public class HikeService {
     public String getSpeed(Long hikeId) {
         return String.format("%.2f", calculateSpeed(hikeId));
     }
+
+    public void deleteById(Long id) {
+        hikeRepository.deleteById(id);
+    }
 }
