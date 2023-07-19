@@ -9,7 +9,9 @@ import com.sda.karkonoszehiking.service.HikeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
@@ -52,5 +54,15 @@ public class HikingController {
         List<WaypointDto> unvisitedWaypointsFromDb = hikeService.getUnvisitedWaypoints();
         model.addAttribute("unvisitedWaypointsFromDb",unvisitedWaypointsFromDb);
         return "unvisited";
+    }
+    @GetMapping("/delete")
+    public String deleteHike(){
+        return "delete";
+    }
+    @PostMapping("/delete")
+    public String delete(@RequestParam Long id, Model model){
+        model.addAttribute("id", id);
+        hikeService.deleteById(id);
+        return "main";
     }
 }
