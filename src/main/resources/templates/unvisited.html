@@ -1,0 +1,27 @@
+\<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unvisited Waypoints</title>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>Waypoint Id</th>
+    <th>Waypoint name</th>
+    <th>Waypoint height</th>
+
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="currentWaypoint : ${unvisitedWaypointsFromDb}">
+    <td th:text="${currentWaypoint.waypointId}"></td>
+    <td th:text="${currentWaypoint.name}"></td>
+    <td th:text="${currentWaypoint.height}"></td>
+
+  </tr>
+</body>
+</html>

@@ -43,8 +43,14 @@ public class HikingController {
     }
     @GetMapping("/visited")
     public String visited(Model model){
-        List<WaypointDto> waypointsFromDb = hikeService.getWaypoints().stream().sorted(Comparator.comparing(WaypointDto::getWaypointId)).collect(Collectors.toList());
+        List<WaypointDto> waypointsFromDb = hikeService.getWaypoints();
         model.addAttribute("waypointsFromDb", waypointsFromDb);
         return "visited";
+    }
+    @GetMapping("/unvisited")
+    public String unvisited(Model model){
+        List<WaypointDto> unvisitedWaypointsFromDb = hikeService.getUnvisitedWaypoints();
+        model.addAttribute("unvisitedWaypointsFromDb",unvisitedWaypointsFromDb);
+        return "unvisited";
     }
 }
