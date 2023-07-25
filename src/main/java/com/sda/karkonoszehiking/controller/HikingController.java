@@ -3,8 +3,9 @@ package com.sda.karkonoszehiking.controller;
 
 import com.sda.karkonoszehiking.model.dto.HikeDto;
 import com.sda.karkonoszehiking.model.dto.WaypointDto;
-import com.sda.karkonoszehiking.model.entity.HikeEntity;
+import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import com.sda.karkonoszehiking.repository.HikeRepository;
+import com.sda.karkonoszehiking.repository.WaypointRepository;
 import com.sda.karkonoszehiking.service.HikeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/hiking")
@@ -24,10 +22,12 @@ public class HikingController {
 
     private final HikeRepository hikeRepository;
     private final HikeService hikeService;
+    private final WaypointRepository waypointRepository;
 
-    public HikingController(HikeRepository hikeRepository, HikeService hikeService) {
+    public HikingController(HikeRepository hikeRepository, HikeService hikeService, WaypointRepository waypointRepository) {
         this.hikeRepository = hikeRepository;
         this.hikeService = hikeService;
+        this.waypointRepository = waypointRepository;
     }
 
 
@@ -65,4 +65,13 @@ public class HikingController {
         hikeService.deleteById(id);
         return "main";
     }
+    @GetMapping("/add")
+    public String add(Model model){
+        List<WaypointEntity>allWaypoints = waypointRepository.findAll();
+        model.addAttribute("allWaypoints", allWaypoints);
+        return "add";
+    }
+
+/*    @PostMapping("/submit")
+    public String submit(@RequestParam )*/
 }
