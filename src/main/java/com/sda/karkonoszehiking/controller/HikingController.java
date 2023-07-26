@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLOutput;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/hiking")
@@ -68,7 +73,17 @@ public class HikingController {
     @GetMapping("/add")
     public String add(Model model){
         List<WaypointEntity>allWaypoints = waypointRepository.findAll();
+        Map<String, List<String>>allWaypointsPaths = new HashMap<>();
+        for (WaypointEntity waypoint : allWaypoints){
+            allWaypointsPaths.put(waypoint.getName(), waypoint.getAvailablePaths().stream().map(each -> each.getName()).collect(Collectors.toList()));
+        }
+
+        System.out.println(allWaypointsPaths);
+        System.out.println("%$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(allWaypointsPaths.get("Piechowice"));
+        System.out.println(allWaypointsPaths instanceof Map);
         model.addAttribute("allWaypoints", allWaypoints);
+        model.addAttribute("allWaypointsPaths", allWaypointsPaths);
         return "add";
     }
 
