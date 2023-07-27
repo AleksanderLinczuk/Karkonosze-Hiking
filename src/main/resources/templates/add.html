@@ -17,56 +17,35 @@
         <textarea name="duration"></textarea>
     </div>
     <div>
-        <label>Route waypoints</label>
-        <textarea name="route"></textarea>
-    </div>
-    <button type="submit">Submit :)</button>
 
-</form>
-
-
-
-<form id="wiadomosci-form" action="/przetwarzanie_danych" method="post">
-    <div id="wiadomosci-container">
-        <label>Wpisz swoje wiadomości:</label><br>
-        <textarea name="wiadomosci" rows="4" cols="50"></textarea><br>
-    </div>
-    <button type="button" onclick="dodajPole()">Dodaj nowe pole</button><br>
-    <input type="submit" value="Wyślij">
-</form>
-
-<script>
-    function dodajPole() {
-        var container = document.getElementById("wiadomosci-container");
-        var textarea = document.createElement("textarea");
-        textarea.name = "wiadomosci";
-        textarea.rows = "4";
-        textarea.cols = "50";
-        container.appendChild(textarea);
-        container.appendChild(document.createElement("br"));
-    }
-</script>
-
-
-
-
-
-
-
-<form action="/przetwarzanie_danych" method="post" id="waypoints-form">
-    <div>
         <label for="waypoint1">Wybierz pierwszy Waypoint:</label><br>
         <select id="waypoint1" name="waypoint1" onchange="pobierzDostepneSciezki(this)">
-            &lt;!&ndash; Generowanie opcji z listy allWaypoints &ndash;&gt;
-            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint}" th:text="${waypoint.name}"></option>
+            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint.name}" th:text="${waypoint.name}"></option>
+        </select><br>
+    </div>
+    <div>
+
+        <label for="waypoint1">Wybierz drugi Waypoint:</label><br>
+        <select id="waypoint2" name="waypoint2" onchange="pobierzDostepneSciezki(this)">
+            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint.name}" th:text="${waypoint.name}"></option>
         </select><br>
     </div>
     <div id="waypoints-container">
-        &lt;!&ndash; Tutaj dynamicznie generowane będą drugie pola select dla availablePaths -->
+
+
     </div>
     <button type="button" onclick="dodajWaypoint()">Dodaj kolejny Waypoint</button>
-    <button type="submit" name="akcja" value="zakoncz">Zakończ</button>
+    </div>
+    <button type="submit">Submit :)</button>
+    <div>
+
 </form>
+
+
+
+
+
+
 
 
 
@@ -75,17 +54,7 @@
 
 <script th:inline="javascript">
     var allWaypointsPaths = /*[[${allWaypointsPaths}]]*/;
-  if (allWaypointsPaths instanceof Map) {
-        console.log('allWaypointsPaths jest obiektem typu Map');
-    } else {
-        console.log('allWaypointsPaths nie jest obiektem typu Map');
-    }
-    var mapData = new Map(Object.entries(allWaypointsPaths));
-  if (mapData instanceof Map) {
-        console.log('mapData jest obiektem typu Map');
-    } else {
-        console.log('mapData nie jest obiektem typu Map');
-    }
+
     function pobierzDostepneSciezki(selectElement) {
         var selectedWaypoint= selectElement.options[selectElement.selectedIndex].text;
 

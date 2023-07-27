@@ -3,19 +3,20 @@ package com.sda.karkonoszehiking.controller;
 
 import com.sda.karkonoszehiking.model.dto.HikeDto;
 import com.sda.karkonoszehiking.model.dto.WaypointDto;
+import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
+import com.sda.karkonoszehiking.model.entity.HikeEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
+import com.sda.karkonoszehiking.repository.AvailablePathRepository;
 import com.sda.karkonoszehiking.repository.HikeRepository;
+import com.sda.karkonoszehiking.repository.RouteRepository;
 import com.sda.karkonoszehiking.repository.WaypointRepository;
 import com.sda.karkonoszehiking.service.HikeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +29,15 @@ public class HikingController {
     private final HikeRepository hikeRepository;
     private final HikeService hikeService;
     private final WaypointRepository waypointRepository;
+    private final RouteRepository routeRepository;
+    private final AvailablePathRepository availablePathRepository;
 
-    public HikingController(HikeRepository hikeRepository, HikeService hikeService, WaypointRepository waypointRepository) {
+    public HikingController(HikeRepository hikeRepository, HikeService hikeService, WaypointRepository waypointRepository, RouteRepository routeRepository, AvailablePathRepository availablePathRepository) {
         this.hikeRepository = hikeRepository;
         this.hikeService = hikeService;
         this.waypointRepository = waypointRepository;
+        this.routeRepository = routeRepository;
+        this.availablePathRepository = availablePathRepository;
     }
 
 
@@ -78,15 +83,24 @@ public class HikingController {
             allWaypointsPaths.put(waypoint.getName(), waypoint.getAvailablePaths().stream().map(each -> each.getName()).collect(Collectors.toList()));
         }
 
-        System.out.println(allWaypointsPaths);
-        System.out.println("%$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(allWaypointsPaths.get("Piechowice"));
-        System.out.println(allWaypointsPaths instanceof Map);
         model.addAttribute("allWaypoints", allWaypoints);
         model.addAttribute("allWaypointsPaths", allWaypointsPaths);
         return "add";
     }
 
-/*    @PostMapping("/submit")
-    public String submit(@RequestParam )*/
+
+    @PostMapping("/submit")
+    public String submit(@RequestParam String date, @RequestParam String duration,
+                         @RequestParam String waypoint1, @RequestParam String waypoint2,
+                         Model model) {
+
+        LocalDate parsedDate = LocalDate.parse(date);
+        LocalTime parsedDuration = LocalTime.parse(duration);
+        WaypointEntity wp1 = waypointRepository.findWaypointEntityByName(waypoint1).get();
+        AvailablePathsEntity wp2 = availablePathRepository.findAvailablePathsEntityByName(waypoint2).get();
+
+        HikeEntity savedHike = hikeRepository.save(new HikeEntity(parsedDate, parsedDuration, List.of(routeRepository.findRouteEntityByStartAndEnd(wp1, wp2).get())));
+
+        return "result";
+    }
 }
