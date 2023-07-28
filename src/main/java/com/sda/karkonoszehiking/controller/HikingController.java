@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,43 +44,49 @@ public class HikingController {
 
     //main menu
     @GetMapping
-    public String mainMenu(Model model){
+    public String mainMenu(Model model) {
         model.addAttribute("name", "Karkonosze Hiking App :)");
         return "main";
     }
+
     @GetMapping("/all")
-    public String all (Model model){
+    public String all(Model model) {
         List<HikeDto> hikesFromDb = hikeService.getHikes();
         model.addAttribute("hikesFromDb", hikesFromDb);
         return "all";
     }
+
     @GetMapping("/visited")
-    public String visited(Model model){
+    public String visited(Model model) {
         List<WaypointDto> waypointsFromDb = hikeService.getWaypoints();
         model.addAttribute("waypointsFromDb", waypointsFromDb);
         return "visited";
     }
+
     @GetMapping("/unvisited")
-    public String unvisited(Model model){
+    public String unvisited(Model model) {
         List<WaypointDto> unvisitedWaypointsFromDb = hikeService.getUnvisitedWaypoints();
-        model.addAttribute("unvisitedWaypointsFromDb",unvisitedWaypointsFromDb);
+        model.addAttribute("unvisitedWaypointsFromDb", unvisitedWaypointsFromDb);
         return "unvisited";
     }
+
     @GetMapping("/delete")
-    public String deleteHike(){
+    public String deleteHike() {
         return "delete";
     }
+
     @PostMapping("/delete")
-    public String delete(@RequestParam Long id, Model model){
+    public String delete(@RequestParam Long id, Model model) {
         model.addAttribute("id", id);
         hikeService.deleteById(id);
         return "main";
     }
+
     @GetMapping("/add")
-    public String add(Model model){
-        List<WaypointEntity>allWaypoints = waypointRepository.findAll();
-        Map<String, List<String>>allWaypointsPaths = new HashMap<>();
-        for (WaypointEntity waypoint : allWaypoints){
+    public String add(Model model) {
+        List<WaypointEntity> allWaypoints = waypointRepository.findAll();
+        Map<String, List<String>> allWaypointsPaths = new HashMap<>();
+        for (WaypointEntity waypoint : allWaypoints) {
             allWaypointsPaths.put(waypoint.getName(), waypoint.getAvailablePaths().stream().map(each -> each.getName()).collect(Collectors.toList()));
         }
 
@@ -90,16 +97,15 @@ public class HikingController {
 
 
     @PostMapping("/submit")
-    public String submit(@RequestParam String date, @RequestParam String duration,
-                         @RequestParam String waypoint1, @RequestParam String waypoint2,
-                         Model model) {
+    public String submit(@RequestParam String date, @RequestParam String duration, @RequestParam Map<String, String> waypointParams, Model model) {
 
-        LocalDate parsedDate = LocalDate.parse(date);
-        LocalTime parsedDuration = LocalTime.parse(duration);
-        WaypointEntity wp1 = waypointRepository.findWaypointEntityByName(waypoint1).get();
-        AvailablePathsEntity wp2 = availablePathRepository.findAvailablePathsEntityByName(waypoint2).get();
 
-        HikeEntity savedHike = hikeRepository.save(new HikeEntity(parsedDate, parsedDuration, List.of(routeRepository.findRouteEntityByStartAndEnd(wp1, wp2).get())));
+        // Iteracja przez mapę waypointParams, aby otrzymać wszystkie wartości waypointów
+        for (Map.Entry<String, String> entry : waypointParams.entrySet()) {
+            String waypointIndex = entry.getKey();
+            String waypointValue = entry.getValue();
+            System.out.println("Waypoint[" + waypointIndex + "]: " + waypointValue);
+        }
 
         return "result";
     }
