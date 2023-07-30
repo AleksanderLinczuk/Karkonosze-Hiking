@@ -5,7 +5,7 @@
     <title>Add new hike</title>
 </head>
 <body>
-<h2>Add new hike: </h2>
+<h2>Add new hike:</h2>
 <br>
 <form method="post" th:action="@{/hiking/submit}">
     <div>
@@ -23,91 +23,105 @@
         <br><br>
         <label for="waypoint1">Select start waypoint:</label>
         <br>
-        <select id="waypoint1" name="waypoint[0]" onchange="pobierzDostepneSciezki(this)">
-            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint.name}"
-                    th:text="${waypoint.name}"></option>
+        <select id="waypoint1" name="waypoint[0]" onchange="onWaypointChange(this)">
+            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint.name}" th:text="${waypoint.name}"></option>
         </select>
     </div>
-    <div>
-        <br><br>
-        <label for="waypoint2">Select another hike waypoint:</label>
-        <br>
-        <select id="waypoint2" name="waypoint[1]" onchange="pobierzDostepneSciezki(this)">
-            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint.name}"
-                    th:text="${waypoint.name}"></option>
-        </select><br><br>
+
+    <div id="waypoints-container">
+
     </div>
-    <div id="waypoints-container"></div>
-    <button type="button" onclick="dodajWaypoint()">Add new waypoint</button>
+    <button type="button" onclick="addWaypoint()">Add new waypoint</button>
     <button type="submit">Submit hike</button>
 </form>
 
 <script th:inline="javascript">
-    var allWaypointsPaths = /*[[${allWaypointsPaths}]]*/;
-    var waypointsArray = [];
-    var waypointCounter = 2;
+        var allWaypointsPaths = /*[[${allWaypointsPaths}]]*/;
+        var mapData = new Map(Object.entries(allWaypointsPaths));
+        var waypointCounter = 1;
 
-  function pobierzDostepneSciezki(selectElement) {
-        var selectedWaypoint= selectElement.options[selectElement.selectedIndex].text;
+        function createSelectElement(name) {
+            var select = document.createElement("select");
+            select.name = name;
+            return select;
+        }
 
-        console.log("Wybrany Waypoint:", selectedWaypoint);
-
-        var sciezkiContainer = document.getElementById("waypoints-container");
-        sciezkiContainer.innerHTML = '';
-
-        var select = document.createElement("select");
-        select.name = "sciezki";
-
-        var availablePaths = mapData.get(selectedWaypoint);
-        console.log("Dostępne ścieżki:", availablePaths);
-
-        if (availablePaths && availablePaths.length > 0) {
-            availablePaths.forEach(function (sciezka) {
-                var option = document.createElement("option");
-                option.value = sciezka;
-                option.text = sciezka;
-                select.appendChild(option);
-            });
-        } else {
-            // Dodaj komunikat, gdy nie ma dostępnych ścieżek
+        function createOptionElement(value, text) {
             var option = document.createElement("option");
-            option.text = "Brak dostępnych ścieżek";
-            select.appendChild(option);
+            option.value = value;
+            option.text = text;
+            return option;
         }
 
-        sciezkiContainer.appendChild(select);
-    }
+        function getAvailablePaths(selectedWaypoint) {
+            var selectedWaypointName = selectedWaypoint.options[selectedWaypoint.selectedIndex].text;
+            console.log("Selected Waypoint:", selectedWaypointName);
 
-    function dodajWaypoint() {
-        var waypointsContainer = document.getElementById("waypoints-container");
-        if (!waypointsContainer) {
-            waypointsContainer = document.createElement("div");
-            waypointsContainer.id = "waypoints-container";
-            document.getElementById("waypoints-form").appendChild(waypointsContainer);
+            var select = createSelectElement("waypoint[" + waypointCounter + "]");
+            waypointCounter++;
+
+            var availablePaths = mapData.get(selectedWaypointName);
+            console.log("Available paths: ", availablePaths);
+
+            if (availablePaths && availablePaths.length > 0) {
+                availablePaths.forEach(function (path) {
+                    select.appendChild(createOptionElement(path, path));
+                });
+            } else {
+                select.appendChild(createOptionElement("", "There are no available paths"));
+            }
+
+            return select;
         }
 
-        var newWaypointDiv = document.createElement("div");
-        var cloneSelect = document.getElementById("waypoint1").cloneNode(true);
+        function addWaypoint() {
+            var waypointsContainer = document.getElementById("waypoints-container");
+            var newWaypointDiv = document.createElement("div");
+            var cloneSelect = document.getElementById("waypoint1").cloneNode(true);
+            var waypointIndex = "waypoint[" + waypointCounter + "]";
 
-        var waypointIndex = "waypoint[" + waypointCounter + "]";
-        cloneSelect.id = waypointIndex;
-        cloneSelect.name = waypointIndex;
-        waypointCounter++;
+            cloneSelect.id = waypointIndex;
+            cloneSelect.name = waypointIndex;
+            waypointCounter++;
 
-        cloneSelect.selectedIndex = 0;
+            cloneSelect.selectedIndex = 0;
 
-        cloneSelect.onchange = function () {
-            pobierzDostepneSciezki(cloneSelect);
+            cloneSelect.onchange = function () {
+                var pathsSelect = getAvailablePaths(cloneSelect);
+                newWaypointDiv.replaceChild(pathsSelect, newWaypointDiv.lastChild);
+            };
+
+            var deleteButton = document.createElement("button");
+            deleteButton.innerText = "Delete";
+            deleteButton.type = "button";
+            deleteButton.onclick = function () {
+                waypointsContainer.removeChild(newWaypointDiv);
+            };
+
+            newWaypointDiv.appendChild(cloneSelect);
+            newWaypointDiv.appendChild(document.createElement("br"));
+            newWaypointDiv.appendChild(deleteButton);
+            waypointsContainer.appendChild(newWaypointDiv);
+            var pathsSelect = getAvailablePaths(cloneSelect);
+            newWaypointDiv.appendChild(pathsSelect);
+        }
+
+        function onWaypointChange(selectElement) {
+            var pathsSelect = getAvailablePaths(selectElement);
+            var waypointsContainer = document.getElementById("waypoints-container");
+            waypointsContainer.replaceChild(pathsSelect, waypointsContainer.lastChild);
+        }
+
+        window.onload = function () {
+            var selectElement = document.getElementById("waypoint1");
+            var pathsSelect = getAvailablePaths(selectElement);
+            var waypointsContainer = document.getElementById("waypoints-container");
+            waypointsContainer.appendChild(pathsSelect);
+
+            selectElement.onchange = function () {
+                onWaypointChange(selectElement);
+            };
         };
-
-        newWaypointDiv.appendChild(cloneSelect);
-        newWaypointDiv.appendChild(document.createElement("br"));
-
-        waypointsContainer.appendChild(newWaypointDiv);
-
-        waypointsArray.push(waypointIndex);
-    }
-
-</script>
+    </script>
 </body>
 </html>

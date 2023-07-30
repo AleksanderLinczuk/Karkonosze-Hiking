@@ -5,6 +5,7 @@ import com.sda.karkonoszehiking.model.dto.HikeDto;
 import com.sda.karkonoszehiking.model.dto.WaypointDto;
 import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
 import com.sda.karkonoszehiking.model.entity.HikeEntity;
+import com.sda.karkonoszehiking.model.entity.RouteEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import com.sda.karkonoszehiking.repository.AvailablePathRepository;
 import com.sda.karkonoszehiking.repository.HikeRepository;
@@ -17,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -97,15 +95,25 @@ public class HikingController {
 
 
     @PostMapping("/submit")
-    public String submit(@RequestParam String date, @RequestParam String duration, @RequestParam Map<String, String> waypointParams, Model model) {
+    public String submit(@RequestParam Map<String, String> hikeParams, Model model) {
 
+        LocalDate hikeDate = LocalDate.parse(hikeParams.get("date"));
+        LocalTime hikeDuration = LocalTime.parse(hikeParams.get("duration"));
+        List<RouteEntity> hikeRoutes = new ArrayList<>();
 
-        // Iteracja przez mapę waypointParams, aby otrzymać wszystkie wartości waypointów
-        for (Map.Entry<String, String> entry : waypointParams.entrySet()) {
-            String waypointIndex = entry.getKey();
-            String waypointValue = entry.getValue();
-            System.out.println("Waypoint[" + waypointIndex + "]: " + waypointValue);
+        List<String> waypoints = hikeParams.entrySet().stream().filter(entry -> entry.getKey().startsWith("waypoint")).map(entry -> entry.getValue()).collect(Collectors.toList());
+
+        for (int i=0; i<waypoints.size(); i+=2){
+            String waypoint1 = waypoints.get(i);
+            String waypoint2 = waypoints.get(i+1);
+            hikeRoutes.add(routeRepository.findRouteEntityByStartAndEnd(waypointRepository.findWaypointEntityByName(waypoint1).get(), availablePathRepository.findAvailablePathsEntityByName(waypoint2).get()).get());
         }
+
+        HikeEntity savedHike = hikeRepository.save(new HikeEntity(hikeDate, hikeDuration, hikeRoutes));
+        model.addAttribute("id", savedHike.getHikeId());
+        model.addAttribute("date", savedHike.getDate());
+        model.addAttribute("duration", savedHike.getDuration());
+        model.addAttribute("routes", hikeService.getHikeWaypoints(savedHike.getHikeId()));
 
         return "result";
     }
