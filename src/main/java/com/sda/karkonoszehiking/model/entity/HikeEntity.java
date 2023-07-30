@@ -33,6 +33,12 @@ public class HikeEntity {
             inverseJoinColumns = @JoinColumn (name = "route_id"))
     private List<RouteEntity> routes = new ArrayList<>();
 
+    public HikeEntity(LocalDate date, LocalTime duration, List<RouteEntity> routes) {
+        this.date = date;
+        this.duration = duration;
+        this.routes = routes;
+    }
+
     @Override
     public String toString() {
         return "HikeEntity{" +

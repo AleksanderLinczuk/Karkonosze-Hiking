@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new hike</title>
+</head>
+<body>
+<h2>Add new hike:</h2>
+<br>
+<form method="post" th:action="@{/hiking/submit}">
+    <div>
+        <label>Enter hike date: [YYYY-MM-DD]</label>
+        <br>
+        <textarea name="date"></textarea>
+    </div>
+    <div>
+        <br><br>
+        <label>Enter hike duration: [HH:MM]</label>
+        <br>
+        <textarea name="duration"></textarea>
+    </div>
+    <div>
+        <br><br>
+        <label for="waypoint1">Select start waypoint:</label>
+        <br>
+        <select id="waypoint1" name="waypoint[0]" onchange="onWaypointChange(this)">
+            <option th:each="waypoint : ${allWaypoints}" th:value="${waypoint.name}" th:text="${waypoint.name}"></option>
+        </select>
+    </div>
+
+    <div id="waypoints-container">
+
+    </div>
+    <button type="button" onclick="addWaypoint()">Add new waypoint</button>
+    <button type="submit">Submit hike</button>
+</form>
+
+<script th:inline="javascript">
+        var allWaypointsPaths = /*[[${allWaypointsPaths}]]*/;
+        var mapData = new Map(Object.entries(allWaypointsPaths));
+        var waypointCounter = 1;
+
+        function createSelectElement(name) {
+            var select = document.createElement("select");
+            select.name = name;
+            return select;
+        }
+
+        function createOptionElement(value, text) {
+            var option = document.createElement("option");
+            option.value = value;
+            option.text = text;
+            return option;
+        }
+
+        function getAvailablePaths(selectedWaypoint) {
+            var selectedWaypointName = selectedWaypoint.options[selectedWaypoint.selectedIndex].text;
+            console.log("Selected Waypoint:", selectedWaypointName);
+
+            var select = createSelectElement("waypoint[" + waypointCounter + "]");
+            waypointCounter++;
+
+            var availablePaths = mapData.get(selectedWaypointName);
+            console.log("Available paths: ", availablePaths);
+
+            if (availablePaths && availablePaths.length > 0) {
+                availablePaths.forEach(function (path) {
+                    select.appendChild(createOptionElement(path, path));
+                });
+            } else {
+                select.appendChild(createOptionElement("", "There are no available paths"));
+            }
+
+            return select;
+        }
+
+        function addWaypoint() {
+            var waypointsContainer = document.getElementById("waypoints-container");
+            var newWaypointDiv = document.createElement("div");
+            var cloneSelect = document.getElementById("waypoint1").cloneNode(true);
+            var waypointIndex = "waypoint[" + waypointCounter + "]";
+
+            cloneSelect.id = waypointIndex;
+            cloneSelect.name = waypointIndex;
+            waypointCounter++;
+
+            cloneSelect.selectedIndex = 0;
+
+            cloneSelect.onchange = function () {
+                var pathsSelect = getAvailablePaths(cloneSelect);
+                newWaypointDiv.replaceChild(pathsSelect, newWaypointDiv.lastChild);
+            };
+
+            var deleteButton = document.createElement("button");
+            deleteButton.innerText = "Delete";
+            deleteButton.type = "button";
+            deleteButton.onclick = function () {
+                waypointsContainer.removeChild(newWaypointDiv);
+            };
+
+            newWaypointDiv.appendChild(cloneSelect);
+            newWaypointDiv.appendChild(document.createElement("br"));
+            newWaypointDiv.appendChild(deleteButton);
+            waypointsContainer.appendChild(newWaypointDiv);
+            var pathsSelect = getAvailablePaths(cloneSelect);
+            newWaypointDiv.appendChild(pathsSelect);
+        }
+
+        function onWaypointChange(selectElement) {
+            var pathsSelect = getAvailablePaths(selectElement);
+            var waypointsContainer = document.getElementById("waypoints-container");
+            waypointsContainer.replaceChild(pathsSelect, waypointsContainer.lastChild);
+        }
+
+        window.onload = function () {
+            var selectElement = document.getElementById("waypoint1");
+            var pathsSelect = getAvailablePaths(selectElement);
+            var waypointsContainer = document.getElementById("waypoints-container");
+            waypointsContainer.appendChild(pathsSelect);
+
+            selectElement.onchange = function () {
+                onWaypointChange(selectElement);
+            };
+        };
+    </script>
+</body>
+</html>
