@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Not found</title>
+</head>
+<body>
+
+<p>Hike with id: <span th:text="${id}"></span> not found! Could not delete.</p>
+
+<div>
+  <a th:href="@{/hiking}">
+    <button>Main menu</button>
+  </a>
+</div>
+</body>
+</html>

@@ -4,6 +4,7 @@ import com.sda.karkonoszehiking.model.dto.HikeDto;
 import com.sda.karkonoszehiking.model.dto.RouteDto;
 import com.sda.karkonoszehiking.model.dto.WaypointDto;
 import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
+import com.sda.karkonoszehiking.model.entity.HikeEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import com.sda.karkonoszehiking.repository.AvailablePathRepository;
 import com.sda.karkonoszehiking.repository.HikeRepository;
@@ -36,7 +37,7 @@ public class HikeService {
                         getHikeDistance(hike.getHikeId()),
                         getPace(hike.getHikeId()),
                         getSpeed(hike.getHikeId())))
-                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
     }
 
     public List<RouteDto> getRoutes() {
@@ -113,5 +114,13 @@ public class HikeService {
 
     public void deleteById(Long id) {
         hikeRepository.deleteById(id);
+    }
+
+    public Optional<HikeEntity> findById(Long id) {
+        return hikeRepository.findById(id);
+    }
+
+    public HikeEntity save(HikeEntity hikeEntity) {
+        return hikeRepository.save(hikeEntity);
     }
 }
