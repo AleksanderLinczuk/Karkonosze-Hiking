@@ -27,7 +27,7 @@ public class HikeEntity {
     private LocalDate date;
     private LocalTime duration;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable (name = "hikes_routes",
             joinColumns = @JoinColumn (name = "hike_id"),
             inverseJoinColumns = @JoinColumn (name = "route_id"))
