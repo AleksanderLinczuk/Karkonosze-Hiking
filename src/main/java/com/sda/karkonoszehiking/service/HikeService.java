@@ -29,6 +29,9 @@ public class HikeService {
     }
 
 
+    public long countHikes(){
+        return hikeRepository.count();
+    }
     public List<HikeDto> getHikes() {
         return hikeRepository.findAll().stream()
                 .map(hike -> new HikeDto(hike.getHikeId(),
@@ -45,7 +48,6 @@ public class HikeService {
                 .stream().map(route -> new RouteDto(route.getRouteId(), route.getStart(), route.getEnd(), route.getLength())).collect(Collectors.toList());
     }
 
-    //TODO make separate service classes!
     public WaypointEntity mapAvailablePathsToWaypoints(AvailablePathsEntity availablePathsEntity) {
         return waypointRepository.findById(availablePathsEntity.getAvailablePathId()).get();
     }
@@ -78,6 +80,8 @@ public class HikeService {
     }*/
 
     //todo: ADD exception handling and get rid of .get() in optionals!
+
+
     public String getHikeWaypoints(Long hikeId) {
         return hikeRepository.findById(hikeId).get().getRoutes().stream().map(route -> route.getStart().getName() + " -> " + route.getEnd().getName()).collect(Collectors.joining(" -> "));
     }
@@ -112,6 +116,9 @@ public class HikeService {
         return String.format("%.2f", calculateSpeed(hikeId));
     }
 
+    public void deleteHike(HikeEntity hike){
+        hikeRepository.delete(hike);
+    }
     public void deleteById(Long id) {
         hikeRepository.deleteById(id);
     }

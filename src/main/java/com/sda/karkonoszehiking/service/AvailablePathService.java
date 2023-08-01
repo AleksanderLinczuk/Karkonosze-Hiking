@@ -4,6 +4,7 @@ import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
 import com.sda.karkonoszehiking.repository.AvailablePathRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,5 +18,9 @@ public class AvailablePathService {
 
     public Optional<AvailablePathsEntity> findAvailablePathsEntityByName(String name) {
         return availablePathRepository.findAvailablePathsEntityByName(name);
+    }
+
+    public List<AvailablePathsEntity> findAll() {
+        return availablePathRepository.findAll();
     }
 }

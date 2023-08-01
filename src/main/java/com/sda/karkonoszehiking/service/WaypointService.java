@@ -1,5 +1,6 @@
 package com.sda.karkonoszehiking.service;
 
+import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import com.sda.karkonoszehiking.repository.WaypointRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class WaypointService {
 
     public List<WaypointEntity> findAll() {
         return waypointRepository.findAll();
+    }
+
+    public List<AvailablePathsEntity> findAvailablePathsToSelectedWaypoint(WaypointEntity waypoint){
+        return waypointRepository.findWaypointEntityByName(waypoint.getName()).get().getAvailablePaths();
     }
 
     public Optional<WaypointEntity> findWaypointEntityByName(String name) {
