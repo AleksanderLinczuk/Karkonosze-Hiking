@@ -39,6 +39,11 @@ public class HikeEntity {
         this.routes = routes;
     }
 
+    public HikeEntity(LocalDate date, LocalTime duration) {
+        this.date = date;
+        this.duration = duration;
+    }
+
     @Override
     public String toString() {
         return "HikeEntity{" +

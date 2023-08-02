@@ -1,8 +1,11 @@
-package com.sda.karkonoszehiking.views;
+package com.sda.karkonoszehiking.views.list;
 
 import com.sda.karkonoszehiking.model.dto.HikeDto;
 import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
+import com.sda.karkonoszehiking.model.entity.RouteEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
+import com.sda.karkonoszehiking.service.HikeService;
+import com.sda.karkonoszehiking.service.RouteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -18,43 +21,53 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HikeForm extends FormLayout {
 
+    private final HikeService hikeService;
+    private final RouteService routeService;
     Binder<HikeDto> binder = new BeanValidationBinder<>(HikeDto.class);
     DatePicker date = new DatePicker("Hike date");
     TimePicker duration = new TimePicker("Hike Duration");
     ComboBox<WaypointEntity> waypoint = new ComboBox<>("Start waypoint");
     ComboBox<AvailablePathsEntity> availablePath = new ComboBox<>("Next waypoint");
 
+    static List<RouteEntity> routes = new ArrayList<>();
+
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button cancel = new Button("Cancel");
 
 
-    public HikeForm(List<WaypointEntity> waypoints, List<AvailablePathsEntity>availablePaths) {
+    public HikeForm(List<WaypointEntity> waypoints, List<AvailablePathsEntity> availablePaths, HikeService hikeService, RouteService routeService) {
+        this.hikeService = hikeService;
+        this.routeService = routeService;
         addClassName("hike-form");
+        date.addValueChangeListener(change -> date.getValue());
+        duration.addValueChangeListener(change -> duration.getValue());
         binder.bindInstanceFields(this);
+
 
         waypoint.setItems(waypoints);
         waypoint.setItemLabelGenerator(WaypointEntity::getName);
         availablePath.setItems(availablePaths);
         availablePath.setItemLabelGenerator(AvailablePathsEntity::getName);
 
+        waypoint.addValueChangeListener(e -> waypoint.getValue());
+        availablePath.addValueChangeListener(e -> availablePath.getValue());
 
-        add(
-                date,
-                duration,
-                waypoint,
-                availablePath,
-                createButtonLayout()
-        );
+
+        add(date, duration, waypoint, availablePath, createButtonLayout());
 
     }
-    public void setHike (HikeDto hike){
+
+    public void setHike(HikeDto hike) {
+
 
         binder.setBean(hike);
+
     }
 
 
@@ -73,10 +86,12 @@ public class HikeForm extends FormLayout {
     }
 
     private void validateAndSave() {
-        if(binder.isValid()){
+        routes.add(routeService.findRouteEntityByStartAndEnd(waypoint.getValue().getName(), availablePath.getValue().getName()).get());
+        if (binder.isValid()) {
             fireEvent(new SaveEvent(this, binder.getBean()));
         }
     }
+
 
     // Events
     public static abstract class ContactFormEvent extends ComponentEvent<HikeForm> {
@@ -87,14 +102,17 @@ public class HikeForm extends FormLayout {
             this.hike = hike;
         }
 
-        public HikeDto getContact() {
+        public HikeDto getHike() {
+            hike.setRoutes(routes);
             return hike;
         }
     }
 
     public static class SaveEvent extends ContactFormEvent {
         SaveEvent(HikeForm source, HikeDto hike) {
+
             super(source, hike);
+
         }
     }
 
@@ -118,6 +136,7 @@ public class HikeForm extends FormLayout {
     public Registration addSaveListener(ComponentEventListener<SaveEvent> listener) {
         return addListener(SaveEvent.class, listener);
     }
+
     public Registration addCloseListener(ComponentEventListener<CloseEvent> listener) {
         return addListener(CloseEvent.class, listener);
     }

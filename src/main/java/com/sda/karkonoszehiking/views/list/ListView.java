@@ -5,7 +5,6 @@ import com.sda.karkonoszehiking.service.AvailablePathService;
 import com.sda.karkonoszehiking.service.HikeService;
 import com.sda.karkonoszehiking.service.RouteService;
 import com.sda.karkonoszehiking.service.WaypointService;
-import com.sda.karkonoszehiking.views.HikeForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -67,8 +66,44 @@ public class ListView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new HikeForm(waypointService.findAll(),availablePathService.findAll());
+        form = new HikeForm(waypointService.findAll(),availablePathService.findAll(), hikeService, routeService);
         form.setWidth("25em");
+
+        form.addSaveListener(this::saveHike);
+        form.addDeleteListener(this::deleteHike);
+        form.addCloseListener(e -> closeEditor());
+    }
+
+    private void deleteHike(HikeForm.DeleteEvent event) {
+        hikeService.deleteHike(event.getHike());
+        updateList();
+        closeEditor();
+    }
+
+    private void saveHike(HikeForm.SaveEvent event) {
+
+
+        hikeService.save(event.getHike());
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(event.getHike());
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+        updateList();
+        closeEditor();
+
     }
 
     private Component getToolbar() {
@@ -77,9 +112,16 @@ public class ListView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
         Button addNewHikeButton = new Button("Add new hike");
+        addNewHikeButton.addClickListener(e -> addHike());
+
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addNewHikeButton);
         toolbar.addClassName("toolbar");
         return toolbar;
+    }
+
+    private void addHike() {
+        grid.asSingleSelect().clear();
+        editHike(new HikeDto());
     }
 
     private void configureGrid() {

@@ -119,6 +119,9 @@ public class HikeService {
     public void deleteHike(HikeEntity hike){
         hikeRepository.delete(hike);
     }
+    public void deleteHike(HikeDto hikeDto){
+        hikeRepository.delete(findById(hikeDto.getHikeId()).get());
+    }
     public void deleteById(Long id) {
         hikeRepository.deleteById(id);
     }
@@ -130,4 +133,8 @@ public class HikeService {
     public HikeEntity save(HikeEntity hikeEntity) {
         return hikeRepository.save(hikeEntity);
     }
+    public HikeEntity save (HikeDto hikeDto){
+        return hikeRepository.save(new HikeEntity(hikeDto.getDate(),hikeDto.getDuration(), hikeDto.getRoutes()));
+    }
+
 }
