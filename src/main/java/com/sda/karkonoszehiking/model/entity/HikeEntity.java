@@ -27,7 +27,7 @@ public class HikeEntity {
     private LocalDate date;
     private LocalTime duration;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable (name = "hikes_routes",
             joinColumns = @JoinColumn (name = "hike_id"),
             inverseJoinColumns = @JoinColumn (name = "route_id"))
@@ -37,6 +37,11 @@ public class HikeEntity {
         this.date = date;
         this.duration = duration;
         this.routes = routes;
+    }
+
+    public HikeEntity(LocalDate date, LocalTime duration) {
+        this.date = date;
+        this.duration = duration;
     }
 
     @Override

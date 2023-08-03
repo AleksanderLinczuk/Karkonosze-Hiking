@@ -26,7 +26,7 @@ public class WaypointEntity {
     private List<RouteEntity> routes = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "waypoints_available_paths",
             joinColumns = @JoinColumn(name = "waypoint_id"),
             inverseJoinColumns = @JoinColumn(name = "available_path_id"))

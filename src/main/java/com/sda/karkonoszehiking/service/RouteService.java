@@ -8,6 +8,7 @@ import com.sda.karkonoszehiking.repository.RouteRepository;
 import com.sda.karkonoszehiking.repository.WaypointRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,5 +30,9 @@ public class RouteService {
     }
     public Optional<RouteEntity> findRouteEntityByStartAndEnd(String startName, String endName) {
         return routeRepository.findRouteEntityByStartAndEnd(waypointRepository.findWaypointEntityByName(startName).get(),availablePathRepository.findAvailablePathsEntityByName(endName).get());
+    }
+
+    public List<RouteEntity> findAll() {
+        return routeRepository.findAll();
     }
 }
