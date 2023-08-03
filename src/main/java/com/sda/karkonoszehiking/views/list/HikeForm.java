@@ -22,6 +22,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HikeForm extends FormLayout {
@@ -33,8 +34,10 @@ public class HikeForm extends FormLayout {
     TimePicker duration = new TimePicker("Hike Duration");
     ComboBox<WaypointEntity> waypoint = new ComboBox<>("Start waypoint");
     ComboBox<AvailablePathsEntity> availablePath = new ComboBox<>("Next waypoint");
+    private List<ComboBox<AvailablePathsEntity>> comboBoxList = new ArrayList<>();
 
     static List<RouteEntity> routes = new ArrayList<>();
+    int comboBoxCounter = 1;
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -45,27 +48,58 @@ public class HikeForm extends FormLayout {
         this.hikeService = hikeService;
         this.routeService = routeService;
         addClassName("hike-form");
+        date.setRequired(true);
         date.addValueChangeListener(change -> date.getValue());
         duration.addValueChangeListener(change -> duration.getValue());
         binder.bindInstanceFields(this);
 
-
         waypoint.setItems(waypoints);
         waypoint.setItemLabelGenerator(WaypointEntity::getName);
-        availablePath.setItems(availablePaths);
-        availablePath.setItemLabelGenerator(AvailablePathsEntity::getName);
 
-        waypoint.addValueChangeListener(e -> waypoint.getValue());
+        waypoint.addValueChangeListener(e -> {
+            WaypointEntity selectedWaypoint = e.getValue();
+            if (selectedWaypoint != null) {
+                availablePath.setItems(selectedWaypoint.getAvailablePaths());
+                add(availablePath);
+            } else {
+                availablePath.setItems(Collections.emptyList());
+            }
+        });
+
+
+        availablePath.setItemLabelGenerator(AvailablePathsEntity::getName);
+        availablePath.setPlaceholder("Select next waypoint");
         availablePath.addValueChangeListener(e -> availablePath.getValue());
 
 
-        add(date, duration, waypoint, availablePath, createButtonLayout());
+        add(date, duration, waypoint);
+
+        Button addNewComboBoxButton = new Button("Add new waypoint");
+        addNewComboBoxButton.addClickListener(e -> addNewComboBox());
+        add(addNewComboBoxButton, createButtonLayout());
+
+    }
+
+    private void addNewComboBox() {
+        if (waypoint.getValue() != null && availablePath.getValue() != null) {
+            ComboBox<AvailablePathsEntity> newComboBox = new ComboBox<>();
+            if (comboBoxList.isEmpty()) {
+                newComboBox.setItems(hikeService.mapAvailablePathsToWaypoints(availablePath.getValue()).getAvailablePaths());
+            } else {
+                AvailablePathsEntity selectedPath = comboBoxList.get(comboBoxList.size() - 1).getValue();
+                newComboBox.setItems(hikeService.mapAvailablePathsToWaypoints(selectedPath).getAvailablePaths());
+            }
+            newComboBox.setItemLabelGenerator(AvailablePathsEntity::getName);
+            newComboBox.setPlaceholder("Select next waypoint");
+            newComboBox.addValueChangeListener(e -> availablePath.getValue());
+            comboBoxList.add(newComboBox);
+            add(newComboBox);
+        }
+
 
     }
 
     public void setHike(HikeDto hike) {
-
-
         binder.setBean(hike);
 
     }
@@ -86,10 +120,53 @@ public class HikeForm extends FormLayout {
     }
 
     private void validateAndSave() {
-        routes.add(routeService.findRouteEntityByStartAndEnd(waypoint.getValue().getName(), availablePath.getValue().getName()).get());
-        if (binder.isValid()) {
-            fireEvent(new SaveEvent(this, binder.getBean()));
+        if(nullCheck()){
+            routes.add(routeService.findRouteEntityByStartAndEnd(waypoint.getValue().getName(), availablePath.getValue().getName()).get());
+            System.out.println(comboBoxList);
+            System.out.println(comboBoxList.size());
+            for (int i = 0; i < comboBoxList.size(); i++) {
+                if (i == 0) {
+                    String waypoint2 = comboBoxList.get(i).getValue().getName();
+                    String waypoint1 = availablePath.getValue().getName();
+                    routes.add(routeService.findRouteEntityByStartAndEnd(waypoint1, waypoint2).get());
+                } else {
+                    String waypoint1 = comboBoxList.get(i - 1).getValue().getName();
+                    String waypoint2 = comboBoxList.get(i).getValue().getName();
+                    routes.add(routeService.findRouteEntityByStartAndEnd(waypoint1, waypoint2).get());
+                }
+            }
+            if (binder.isValid()) {
+                fireEvent(new SaveEvent(this, binder.getBean()));
+            }
         }
+    }
+
+    private boolean nullCheck() {
+        if (this.date != null && !this.date.isEmpty() && this.duration != null && !this.duration.isEmpty() && this.waypoint != null && !this.waypoint.isEmpty() && this.availablePath != null && !this.availablePath.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+    private void clearComboBoxList() {
+        comboBoxList.forEach(this::remove);
+        comboBoxList.clear();
+    }
+
+
+    public void resetWaypoints() {
+        waypoint.clear();
+        availablePath.clear();
+        clearComboBoxList();
+        routes.clear();
+    }
+
+    public void resetForm() {
+        date.clear();
+        duration.clear();
+        waypoint.clear();
+        availablePath.clear();
+        clearComboBoxList();
+        routes.clear();
     }
 
 
@@ -112,6 +189,7 @@ public class HikeForm extends FormLayout {
         SaveEvent(HikeForm source, HikeDto hike) {
 
             super(source, hike);
+
 
         }
     }

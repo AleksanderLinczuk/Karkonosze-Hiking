@@ -82,25 +82,8 @@ public class ListView extends VerticalLayout {
 
     private void saveHike(HikeForm.SaveEvent event) {
 
-
         hikeService.save(event.getHike());
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(event.getHike());
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("%%%%%%%%%%%%%%%%%#@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%");
+
         updateList();
         closeEditor();
 
@@ -114,13 +97,15 @@ public class ListView extends VerticalLayout {
         Button addNewHikeButton = new Button("Add new hike");
         addNewHikeButton.addClickListener(e -> addHike());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addNewHikeButton);
+        HorizontalLayout toolbar = new HorizontalLayout( addNewHikeButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
     private void addHike() {
+
         grid.asSingleSelect().clear();
+        form.resetForm();
         editHike(new HikeDto());
     }
 
@@ -134,6 +119,7 @@ public class ListView extends VerticalLayout {
         grid.getColumns().forEach(each -> each.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(e -> editHike(e.getValue()));
+        grid.asSingleSelect().addValueChangeListener(e -> form.resetWaypoints());
     }
 
     private void editHike(HikeDto hike) {
