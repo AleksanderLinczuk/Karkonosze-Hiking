@@ -5,6 +5,7 @@ import com.sda.karkonoszehiking.service.AvailablePathService;
 import com.sda.karkonoszehiking.service.HikeService;
 import com.sda.karkonoszehiking.service.RouteService;
 import com.sda.karkonoszehiking.service.WaypointService;
+import com.sda.karkonoszehiking.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -16,7 +17,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 @PageTitle("Hike - Karkonosze")
-@Route(value = "")
+@Route(value = "", layout = MainLayout.class)
 public class ListView extends VerticalLayout {
     Grid<HikeDto> grid = new Grid<>(HikeDto.class);
     TextField filterText = new TextField();

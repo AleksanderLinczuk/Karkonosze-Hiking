@@ -29,9 +29,10 @@ public class HikeService {
     }
 
 
-    public long countHikes(){
+    public long countHikes() {
         return hikeRepository.count();
     }
+
     public List<HikeDto> getHikes() {
         return hikeRepository.findAll().stream()
                 .map(hike -> new HikeDto(hike.getHikeId(),
@@ -40,7 +41,7 @@ public class HikeService {
                         getHikeDistance(hike.getHikeId()),
                         getPace(hike.getHikeId()),
                         getSpeed(hike.getHikeId())))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public List<RouteDto> getRoutes() {
@@ -83,7 +84,16 @@ public class HikeService {
 
 
     public String getHikeWaypoints(Long hikeId) {
-        return hikeRepository.findById(hikeId).get().getRoutes().stream().map(route -> route.getStart().getName() + " -> " + route.getEnd().getName()).collect(Collectors.joining(" -> "));
+        return hikeRepository.findById(hikeId)
+                .map(hike -> {
+                    LinkedHashSet<String> uniqueWaypoints = new LinkedHashSet<>();
+                    hike.getRoutes().forEach(route -> {
+                        uniqueWaypoints.add(route.getStart().getName());
+                        uniqueWaypoints.add(route.getEnd().getName());
+                    });
+                    return String.join(" -> ", uniqueWaypoints);
+                })
+                .orElse("");
     }
 
     public double getHikeDistance(Long hikeId) {
@@ -116,12 +126,14 @@ public class HikeService {
         return String.format("%.2f", calculateSpeed(hikeId));
     }
 
-    public void deleteHike(HikeEntity hike){
+    public void deleteHike(HikeEntity hike) {
         hikeRepository.delete(hike);
     }
-    public void deleteHike(HikeDto hikeDto){
+
+    public void deleteHike(HikeDto hikeDto) {
         hikeRepository.delete(findById(hikeDto.getHikeId()).get());
     }
+
     public void deleteById(Long id) {
         hikeRepository.deleteById(id);
     }
@@ -133,8 +145,9 @@ public class HikeService {
     public HikeEntity save(HikeEntity hikeEntity) {
         return hikeRepository.save(hikeEntity);
     }
-    public HikeEntity save (HikeDto hikeDto){
-        return hikeRepository.save(new HikeEntity(hikeDto.getDate(),hikeDto.getDuration(), hikeDto.getRoutes()));
+
+    public HikeEntity save(HikeDto hikeDto) {
+        return hikeRepository.save(new HikeEntity(hikeDto.getDate(), hikeDto.getDuration(), hikeDto.getRoutes()));
     }
 
 }
