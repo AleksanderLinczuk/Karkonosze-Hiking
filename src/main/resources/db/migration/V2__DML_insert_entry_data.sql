@@ -1,4 +1,4 @@
-/*INSERT INTO waypoints (name, height) VALUES
+INSERT INTO waypoints (name, height) VALUES
 	('Jagniątków', '519'),
 	('Sośnik', '654'),
 	('Piechowice', '386'),
@@ -260,7 +260,7 @@ INSERT INTO hikes_routes (hike_id, route_id) VALUES
 	('2', '3'),
 	('3', '13'),
 	('3', '28'),
-	('3', '68')	,
+	('3', '68'),
     ('4', '68'),
 	('4', '28'),
 	('4', '13'),
@@ -269,4 +269,4 @@ INSERT INTO hikes_routes (hike_id, route_id) VALUES
 	('5', '37'),
 	('6', '37'),
 	('6', '41'),
-	('6', '19');*/
+	('6', '19');
