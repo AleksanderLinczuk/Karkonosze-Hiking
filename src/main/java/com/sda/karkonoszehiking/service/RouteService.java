@@ -15,24 +15,21 @@ import java.util.Optional;
 public class RouteService {
 
     private final RouteRepository routeRepository;
-    private final WaypointRepository waypointRepository;
-    private final AvailablePathRepository availablePathRepository;
+    private final WaypointService waypointService;
+    private final AvailablePathService availablePathService;
 
 
-    public RouteService(RouteRepository routeRepository, WaypointRepository waypointRepository, AvailablePathRepository availablePathRepository) {
+    public RouteService(RouteRepository routeRepository, WaypointRepository waypointRepository, AvailablePathRepository availablePathRepository, WaypointService waypointService, AvailablePathService availablePathService) {
         this.routeRepository = routeRepository;
-        this.waypointRepository = waypointRepository;
-        this.availablePathRepository = availablePathRepository;
+        this.waypointService = waypointService;
+        this.availablePathService = availablePathService;
     }
 
     public Optional<RouteEntity> findRouteEntityByStartAndEnd(WaypointEntity waypointEntity, AvailablePathsEntity availablePathsEntity) {
         return routeRepository.findRouteEntityByStartAndEnd(waypointEntity,availablePathsEntity);
     }
     public Optional<RouteEntity> findRouteEntityByStartAndEnd(String startName, String endName) {
-        return routeRepository.findRouteEntityByStartAndEnd(waypointRepository.findWaypointEntityByName(startName).get(),availablePathRepository.findAvailablePathsEntityByName(endName).get());
+        return findRouteEntityByStartAndEnd(waypointService.findWaypointEntityByName(startName).get(),availablePathService.findAvailablePathsEntityByName(endName).get());
     }
 
-    public List<RouteEntity> findAll() {
-        return routeRepository.findAll();
-    }
 }

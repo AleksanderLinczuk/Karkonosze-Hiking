@@ -67,7 +67,7 @@ public class ListView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new HikeForm(waypointService.findAll(),availablePathService.findAll(), hikeService, routeService);
+        form = new HikeForm(waypointService.findAll(),availablePathService.findAll(), hikeService, routeService, waypointService);
         form.setWidth("25em");
 
         form.addSaveListener(this::saveHike);

@@ -55,7 +55,7 @@ public class HikingController {
 
     @GetMapping("/visited")
     public String visited(Model model) {
-        List<WaypointDto> waypointsFromDb = hikeService.getWaypoints();
+        List<WaypointDto> waypointsFromDb = hikeService.getVisitedWaypoints();
         model.addAttribute("waypointsFromDb", waypointsFromDb);
         return "visited";
     }
