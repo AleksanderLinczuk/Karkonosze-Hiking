@@ -1,4 +1,4 @@
-package com.sda.karkonoszehiking.service;
+package com.sda.karkonoszehiking.unit.service;
 
 import com.sda.karkonoszehiking.model.dto.HikeDto;
 import com.sda.karkonoszehiking.model.entity.AvailablePathsEntity;
@@ -7,6 +7,7 @@ import com.sda.karkonoszehiking.model.entity.RouteEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import com.sda.karkonoszehiking.repository.HikeRepository;
 import com.sda.karkonoszehiking.repository.WaypointRepository;
+import com.sda.karkonoszehiking.service.HikeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
