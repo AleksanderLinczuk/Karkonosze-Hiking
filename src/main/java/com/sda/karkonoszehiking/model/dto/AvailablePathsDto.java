@@ -6,6 +6,7 @@ import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode
+
 public class AvailablePathsDto {
 
 

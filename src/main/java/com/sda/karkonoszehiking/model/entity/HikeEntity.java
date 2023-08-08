@@ -2,10 +2,7 @@ package com.sda.karkonoszehiking.model.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "hikes")
 public class HikeEntity {
 
@@ -39,6 +37,11 @@ public class HikeEntity {
         this.routes = routes;
     }
 
+    public HikeEntity(Long hikeId, LocalDate date, LocalTime duration) {
+        this.hikeId = hikeId;
+        this.date = date;
+        this.duration = duration;
+    }
 
     @Override
     public String toString() {

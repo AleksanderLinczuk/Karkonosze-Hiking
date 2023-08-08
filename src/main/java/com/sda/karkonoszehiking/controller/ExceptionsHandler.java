@@ -1,3 +1,4 @@
+/*
 package com.sda.karkonoszehiking.controller;
 
 import com.sda.karkonoszehiking.exception.HikeNotFoundException;
@@ -14,3 +15,4 @@ public class ExceptionsHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), exception.getMessage());
     }
 }
+*/
