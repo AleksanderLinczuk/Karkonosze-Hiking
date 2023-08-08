@@ -6,6 +6,7 @@ import com.sda.karkonoszehiking.model.entity.RouteEntity;
 import com.sda.karkonoszehiking.model.entity.WaypointEntity;
 import com.sda.karkonoszehiking.service.HikeService;
 import com.sda.karkonoszehiking.service.RouteService;
+import com.sda.karkonoszehiking.service.WaypointService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -29,6 +30,7 @@ public class HikeForm extends FormLayout {
 
     private final HikeService hikeService;
     private final RouteService routeService;
+    private final WaypointService waypointService;
     Binder<HikeDto> binder = new BeanValidationBinder<>(HikeDto.class);
     DatePicker date = new DatePicker("Hike date");
     TimePicker duration = new TimePicker("Hike Duration");
@@ -44,9 +46,10 @@ public class HikeForm extends FormLayout {
     Button cancel = new Button("Cancel");
 
 
-    public HikeForm(List<WaypointEntity> waypoints, List<AvailablePathsEntity> availablePaths, HikeService hikeService, RouteService routeService) {
+    public HikeForm(List<WaypointEntity> waypoints, List<AvailablePathsEntity> availablePaths, HikeService hikeService, RouteService routeService, WaypointService waypointService) {
         this.hikeService = hikeService;
         this.routeService = routeService;
+        this.waypointService = waypointService;
         addClassName("hike-form");
         date.setRequired(true);
         date.addValueChangeListener(change -> date.getValue());

@@ -34,8 +34,6 @@ public class UnvisitedWaypointsView extends VerticalLayout {
 
     }
 
-
-
     private void configureGrid() {
 
         unvisitedWaypointsGrid.addClassName("unvisited-grid");

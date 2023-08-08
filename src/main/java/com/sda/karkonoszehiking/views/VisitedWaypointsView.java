@@ -39,7 +39,7 @@ public class VisitedWaypointsView extends VerticalLayout {
         visitedWaypointsGrid.addClassName("visited-grid");
         visitedWaypointsGrid.setSizeFull();
 
-        List<WaypointDto> visitedWaypoints = hikeService.getWaypoints().stream().distinct().sorted(Comparator.comparing(WaypointDto::getName)).collect(Collectors.toList());
+        List<WaypointDto> visitedWaypoints = hikeService.getVisitedWaypoints().stream().distinct().sorted(Comparator.comparing(WaypointDto::getName)).collect(Collectors.toList());
 
         visitedWaypointsGrid.setItems(visitedWaypoints);
         visitedWaypointsGrid.removeAllColumns();

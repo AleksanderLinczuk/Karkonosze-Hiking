@@ -16,11 +16,11 @@ public class AvailablePathService {
         this.availablePathRepository = availablePathRepository;
     }
 
-    public Optional<AvailablePathsEntity> findAvailablePathsEntityByName(String name) {
-        return availablePathRepository.findAvailablePathsEntityByName(name);
-    }
-
     public List<AvailablePathsEntity> findAll() {
         return availablePathRepository.findAll();
+    }
+
+    public Optional<AvailablePathsEntity> findAvailablePathsEntityByName(String name) {
+        return availablePathRepository.findAvailablePathsEntityByName(name);
     }
 }
