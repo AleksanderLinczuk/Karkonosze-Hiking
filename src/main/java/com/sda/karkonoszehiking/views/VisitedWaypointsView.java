@@ -2,7 +2,11 @@ package com.sda.karkonoszehiking.views;
 
 import com.sda.karkonoszehiking.model.dto.WaypointDto;
 import com.sda.karkonoszehiking.service.HikeService;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -13,9 +17,10 @@ import java.util.stream.Collectors;
 
 @Route(value = "visited", layout = MainLayout.class)
 @PageTitle("Visited waypoints")
-public class VisitedWaypointsView extends VerticalLayout {
+public class VisitedWaypointsView extends HorizontalLayout {
 
     private final HikeService hikeService;
+    Image map = new Image();
     Grid<WaypointDto> visitedWaypointsGrid = new Grid<>(WaypointDto.class);
 
 
@@ -26,12 +31,21 @@ public class VisitedWaypointsView extends VerticalLayout {
         setSizeFull();
         configureGrid();
 
-
-        add(visitedWaypointsGrid);
+        add(
+                getImage(),
+                visitedWaypointsGrid
+        );
 
 
     }
 
+    private Component getImage() {
+        map.setSrc("https://naszeszlaki.com.pl/wp-content/uploads/2017/10/4-87.jpg");
+        map.setMaxWidth(100, Unit.PERCENTAGE);
+        HorizontalLayout image = new HorizontalLayout(map);
+        image.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        return image;
+    }
 
 
     private void configureGrid() {
@@ -49,6 +63,7 @@ public class VisitedWaypointsView extends VerticalLayout {
         visitedWaypointsGrid.addColumn(WaypointDto::getHeight).setHeader(("Height"));
 
         visitedWaypointsGrid.getColumns().forEach(each -> each.setAutoWidth(true));
+        visitedWaypointsGrid.setMaxWidth(550,Unit.PIXELS);
     }
 
 
