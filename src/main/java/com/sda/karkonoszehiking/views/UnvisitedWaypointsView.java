@@ -11,12 +11,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Route(value = "unvisited", layout = MainLayout.class)
 @PageTitle("Unvisited waypoints")
+@PermitAll
 public class UnvisitedWaypointsView extends HorizontalLayout {
 
     private final HikeService hikeService;

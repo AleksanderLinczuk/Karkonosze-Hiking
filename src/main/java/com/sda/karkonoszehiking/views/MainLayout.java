@@ -1,8 +1,10 @@
 package com.sda.karkonoszehiking.views;
 
+import com.sda.karkonoszehiking.security.SecurityService;
 import com.sda.karkonoszehiking.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -11,7 +13,10 @@ import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 
 public class MainLayout extends AppLayout {
-    public MainLayout() {
+
+    private final SecurityService securityService;
+    public MainLayout(SecurityService securityService) {
+        this.securityService = securityService;
         createHeader();
         createDrawer();
     }
@@ -20,7 +25,9 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Karkonosze hiking application");
         logo.addClassNames("text-l", "m-m");
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
+        Button logout = new Button("Logout", e -> securityService.logout());
+
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();

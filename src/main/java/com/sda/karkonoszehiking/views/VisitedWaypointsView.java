@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Route(value = "visited", layout = MainLayout.class)
 @PageTitle("Visited waypoints")
+@PermitAll
 public class VisitedWaypointsView extends HorizontalLayout {
 
     private final HikeService hikeService;
