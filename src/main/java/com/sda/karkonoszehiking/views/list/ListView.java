@@ -17,9 +17,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
-@PageTitle("Hike - Karkonosze")
+@PageTitle("Karkonosze hiking application")
 @Route(value = "", layout = MainLayout.class)
+@PermitAll
 public class ListView extends VerticalLayout {
     Grid<HikeDto> grid = new Grid<>(HikeDto.class);
     TextField filterText = new TextField();

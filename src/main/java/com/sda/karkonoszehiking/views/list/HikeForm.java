@@ -22,6 +22,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +54,7 @@ public class HikeForm extends FormLayout {
         addClassName("hike-form");
         date.setRequired(true);
         date.addValueChangeListener(change -> date.getValue());
+        duration.setStep(Duration.ofMinutes(15));
         duration.addValueChangeListener(change -> duration.getValue());
         binder.bindInstanceFields(this);
 
