@@ -106,7 +106,7 @@ class HikeServiceTest {
         assertEquals(hikeDate,hikeEntity2.getDate());
         assertEquals(hikeDuration,hikeEntity2.getDuration());
         assertEquals(routes.toString(),hikeEntity2.getRoutes().toString());
-        //assertArra(routes, hikeEntity2.getRoutes().stream().collect(Collectors.toList()));
+        //assertArray(routes, hikeEntity2.getRoutes().stream().collect(Collectors.toList()));
     }
 
 
