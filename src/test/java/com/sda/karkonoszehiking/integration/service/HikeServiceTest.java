@@ -99,8 +99,7 @@ class HikeServiceTest {
         assertEquals(hikeDuration,hikeEntity.getDuration());
         assertEquals(1, hikeService.countHikes());
 
-        HikeEntity placeHolder = new HikeEntity();
-        placeHolder.setRoutes(routes);
+
         HikeEntity hikeEntity2 = hikeService.findById(hikeEntity.getHikeId()).get();
         assertEquals(1L,hikeEntity2.getHikeId());
         assertEquals(hikeDate,hikeEntity2.getDate());
