@@ -2,6 +2,7 @@ package com.sda.karkonoszehiking.views;
 
 
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -23,9 +24,14 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        login.setAction("login");
 
-        add(new H1("Karkonosze hiking application"), login);
+        login.setAction("login");
+        add(new H1("Karkonosze hiking application"));
+        add(new H2("Security feature is still in progress"));
+        add(new H2("For now please use credentials below:"));
+        add(new H2("User: user"));
+        add(new H2("Password: user"));
+        add(login);
     }
 
     @Override
